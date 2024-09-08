@@ -1,5 +1,5 @@
 # csmblog
- Blog with CSM using ReactJs, PHP, Laravel
+ Blog with CSM using ReactJs, PHP, Laravel, Typescript, Tailwindcss
  
 # General Architecture:
 
