@@ -1,5 +1,5 @@
 import { useForm, SubmitHandler } from "react-hook-form"
-
+import { login } from "../services/AuthService"
 type Input = {
   email: string,
   password: string
@@ -7,8 +7,7 @@ type Input = {
 function Login() {
   const {register, handleSubmit, watch, formState:{errors}} = useForm();
   const loginHandler: SubmitHandler<Inputs> = (payload) => {
-  
-    console.log(payload)
+    login(payload)
   }
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
