@@ -8,4 +8,17 @@ const axiosInstance = axios.create({
     }
 })
 
+axiosInstance.interceptors.response.use(
+    response => {
+        return response.data
+    },
+    error => {
+       const { response } = error
+       if(response.status === 401){
+            //refresh token here
+       }
+       return Promise.reject(error) 
+    }
+
+)
 export default axiosInstance
