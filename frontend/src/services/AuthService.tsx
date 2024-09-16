@@ -6,7 +6,7 @@ type LoginPayload = {
 
 const login = async (payload:LoginPayload) => {
     try {
-        const response = axiosInstance.get('/login')
+        const response = axiosInstance.post('/login')
         console.log(response)
     } catch(error) {
         console.log(error)

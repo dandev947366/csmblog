@@ -5,7 +5,7 @@ type Input = {
   password: string
 }
 function Login() {
-  const {register, handleSubmit, watch, formState:{errors}} = useForm();
+  const {register, handleSubmit, watch, formState:{errors}} = useForm<Inputs>();
   const loginHandler: SubmitHandler<Inputs> = (payload) => {
     login(payload)
   }
