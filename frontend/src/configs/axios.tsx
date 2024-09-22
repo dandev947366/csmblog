@@ -10,7 +10,7 @@ const axiosInstance = axios.create({
 
 axiosInstance.interceptors.response.use(
     response => {
-        return response.data
+        return response.data ? response.data : response
     },
     error => {
        const { response } = error

@@ -26,13 +26,18 @@ class AuthRequest extends FormRequest
             'password' => 'required',
         ];
     }
+
+    /**
+     * Get the custom validation messages for the request.
+     *
+     * @return array<string, string>
+     */
     public function messages(): array
     {
         return [
             'email.required' => 'You have not input email.',
             'email.email' => 'Email format is not correct.',
-            'password.required' => 'You have not input password.'
-
-        ]
+            'password.required' => 'You have not input password.',
+        ];
     }
 }
