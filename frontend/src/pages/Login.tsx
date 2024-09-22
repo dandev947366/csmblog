@@ -2,18 +2,20 @@ import { useForm, SubmitHandler } from "react-hook-form"
 import { useNavigate } from "react-router-dom" // Ensure you import useNavigate from 'react-router-dom'
 import { login } from "../services/AuthService"
 import { toast } from 'react-toastify'
-
+import { useToast } from "../contexts/ToastContext"
 type Inputs = { // Ensure consistency with the type name
   email: string,
   password: string
 }
 
-const Login = () => { // Corrected function declaration
+const Login = () => { 
+  const { setMessage } = useToast()
   const navigate = useNavigate();
   const { register, handleSubmit, formState: { errors } } = useForm<Inputs>();
 
   const loginHandler: SubmitHandler<Inputs> = async (payload) => {
     const logged = await login(payload);
+    setMessage("Login Successfully")
     logged && navigate('/dashboard')
     
   }
