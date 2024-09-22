@@ -1,24 +1,31 @@
-import { useForm, SubmitHandler } from "react-hook-form"
-import { useNavigate } from "react-router-dom" // Ensure you import useNavigate from 'react-router-dom'
-import { login } from "../services/AuthService"
-import { toast } from 'react-toastify'
-import { useToast } from "../contexts/ToastContext"
-type Inputs = { // Ensure consistency with the type name
-  email: string,
-  password: string
-}
+import { useForm, SubmitHandler } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
+import { login } from "../services/AuthService";
+import { useToast } from "../contexts/ToastContext";
 
-const Login = () => { 
-  const { setMessage } = useToast()
+type Inputs = {
+  email: string;
+  password: string;
+};
+
+const Login = () => {
+  const { setMessage } = useToast();
   const navigate = useNavigate();
   const { register, handleSubmit, formState: { errors } } = useForm<Inputs>();
 
   const loginHandler: SubmitHandler<Inputs> = async (payload) => {
-    const logged = await login(payload);
-    setMessage("Login Successfully")
-    logged && navigate('/dashboard')
-    
-  }
+    try {
+      const logged = await login(payload);
+      if (logged) {
+        setMessage("Login Successful", 'success');
+        navigate('/dashboard');
+      } else {
+        setMessage("Invalid email or password", 'error');
+      }
+    } catch (error) {
+      setMessage("Something went wrong. Please try again.", 'error');
+    }
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
@@ -27,16 +34,26 @@ const Login = () => {
         <form onSubmit={handleSubmit(loginHandler)}>
           <div className="mb-4">
             <label htmlFor="email" className="block text-gray-700 text-sm py-2 font-bold">Email:</label>
-            <input type="text" id="email" placeholder="Enter email" className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring focus:ring-blue-200 h-8" 
-              {...register("email", { required: true })} />
-            {errors.email && <span className="text-red-500 text-xs">Email is required</span>}
+            <input 
+              type="text" 
+              id="email" 
+              placeholder="Enter email" 
+              className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring focus:ring-blue-200 h-8" 
+              {...register("email", { required: "Email is required" })} 
+            />
+            {errors.email && <span className="text-red-500 text-xs">{errors.email.message}</span>}
           </div>
 
           <div className="mb-4">
             <label htmlFor="password" className="block text-gray-700 text-sm py-2 font-bold">Password:</label>
-            <input type="password" id="password" placeholder="Enter password" className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring focus:ring-blue-200 h-8" 
-              {...register("password", { required: true })} />
-            {errors.password && <span className="text-red-500 text-xs">Password is required</span>}
+            <input 
+              type="password" 
+              id="password" 
+              placeholder="Enter password" 
+              className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring focus:ring-blue-200 h-8" 
+              {...register("password", { required: "Password is required" })} 
+            />
+            {errors.password && <span className="text-red-500 text-xs">{errors.password.message}</span>}
           </div>
 
           <div className="mb-6">
@@ -48,6 +65,6 @@ const Login = () => {
       </div>
     </div>
   );
-}
+};
 
 export default Login;

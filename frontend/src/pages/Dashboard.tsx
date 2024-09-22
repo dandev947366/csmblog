@@ -1,20 +1,19 @@
-import { useToast } from "../contexts/ToastContext"
-import { toast } from "react-toastify"
-import { useEffect } from "react"
+import { useToast } from "../contexts/ToastContext";
+import { useEffect } from "react";
+import { showNotify } from '../helpers/myHelper';
 
 function Dashboard() {
-  const { message, setMessage } = useToast()
+  const { message, type, setMessage } = useToast(); 
 
   useEffect(() => { 
-    if (message) {
-      toast.success(message)
-      setMessage('') // Clear the message after displaying the toast
+    if (message && type) { 
+      showNotify(message, type, setMessage);
     }
-  }, [message, setMessage]) // Dependency array
+  }, [message, type, setMessage]); // Dependency array
 
   return (
     <div>Dashboard</div>
-  )
+  );
 }
 
-export default Dashboard
+export default Dashboard;
