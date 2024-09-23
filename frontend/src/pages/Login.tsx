@@ -2,29 +2,26 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { login } from "../services/AuthService";
 import { useToast } from "../contexts/ToastContext";
-
+import { setToast } from "../redux/slice/toastSlice";
+import { useDispatch } from "react-redux";
 type Inputs = {
   email: string;
   password: string;
 };
 
 const Login = () => {
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
   const { setMessage } = useToast();
-  const navigate = useNavigate();
+
   const { register, handleSubmit, formState: { errors } } = useForm<Inputs>();
 
   const loginHandler: SubmitHandler<Inputs> = async (payload) => {
-    try {
-      const logged = await login(payload);
-      if (logged) {
-        setMessage("Login Successful", 'success');
-        navigate('/dashboard');
-      } else {
-        setMessage("Invalid email or password", 'error');
-      }
-    } catch (error) {
-      setMessage("Something went wrong. Please try again.", 'error');
-    }
+
+    const logged = await login(payload);
+    dispatch(setToast({ message: "Login Successfully", type:'success'}))
+    logged && navigate('/dashboard')
+      
   };
 
   return (

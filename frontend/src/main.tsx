@@ -4,7 +4,8 @@ import { ToastContainer, toast } from 'react-toastify'
 import { ToastProvider } from './contexts/ToastContext' 
 import 'react-toastify/dist/ReactToastify.css'
 import './index.css'
-
+import { store } from "./redux/store"
+import { Provider } from "react-redux";
 import {
   createBrowserRouter,
   RouterProvider
@@ -22,7 +23,7 @@ const router = createBrowserRouter([
   }
 ])
 createRoot(document.getElementById('root')!).render(
-  <>
+  <Provider store={store}>
     
     <ToastProvider>
       <RouterProvider router={router}  />
@@ -30,5 +31,5 @@ createRoot(document.getElementById('root')!).render(
       
     </ToastProvider>
     
-  </>,
+  </Provider>,
 )
