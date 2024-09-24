@@ -4,24 +4,32 @@ import { login } from "../services/AuthService";
 import { useToast } from "../contexts/ToastContext";
 import { setToast } from "../redux/slice/toastSlice";
 import { useDispatch } from "react-redux";
+import { Button } from "@/components/ui/button"
+import { Loader2 } from "lucide-react"
+import { useState } from 'react'
 type Inputs = {
   email: string;
   password: string;
 };
-
 const Login = () => {
   const navigate = useNavigate()
   const dispatch = useDispatch()
-  const { setMessage } = useToast();
-
+  // const { setMessage } = useToast();
+  const [loading, setLoading] = useState<boolean>(false)
   const { register, handleSubmit, formState: { errors } } = useForm<Inputs>();
 
   const loginHandler: SubmitHandler<Inputs> = async (payload) => {
-
-    const logged = await login(payload);
-    dispatch(setToast({ message: "Login Successfully", type:'success'}))
-    logged && navigate('/dashboard')
+    setLoading(true)
+    try {
+      const logged = await login(payload);
+      dispatch(setToast({ message: "Login Successfully", type:'success'}))
+      logged && navigate('/dashboard')
+    } catch (error) {
       
+    } finally {
+      setLoading(false)
+    }
+
   };
 
   return (
@@ -54,7 +62,17 @@ const Login = () => {
           </div>
 
           <div className="mb-6">
-            <button type="submit" className="w-full p-2 rounded bg-blue-500 text-white hover:bg-blue-700">Submit</button>
+          <Button 
+    disabled={loading} 
+    type="submit" 
+    className="text-sm w-full p-2 rounded bg-blue-500 text-white hover:bg-blue-700"
+>
+    {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+    {loading ? 'Submitting' : 'Login'}
+  
+</Button>
+
+            
           </div>
 
           <p className="text-center text-blue-700"><a href="/">Forgot password?</a></p>
