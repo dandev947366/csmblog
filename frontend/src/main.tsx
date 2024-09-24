@@ -12,6 +12,8 @@ import {
 } from 'react-router-dom'
 import Login from './pages/Login'
 import Dashboard from './pages/Dashboard'
+import { setToast } from "./redux/slice/toastSlice"
+import { useDispatch } from "react-redux"
 const router = createBrowserRouter([
   {
     path: "/admin",

@@ -1,17 +1,20 @@
-import { useToast } from "../contexts/ToastContext";
 import { useEffect } from "react";
-import { showNotify } from '../helpers/myHelper';
-import { RootState } from "../redux/store"
-import { clearToast } from "../redux/slice/toastSlice"
+import { RootState } from "../redux/store";
 import { useSelector, useDispatch } from "react-redux";
+import { showToast } from "../helpers/myHelper";
+import { clearToast } from "../redux/slice/toastSlice";
+
 function Dashboard() {
-  const { message, type, setMessage } = useSelector((state: RootState)=>{state.counter.value}); 
-  const dispatch = useDispatch()
-  useEffect(() => { 
-    if (message && type) { 
-      showNotify(message, type, setMessage);
+  const { message, type } = useSelector((state: RootState) => state.toast);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    // Show the toast notification if there is a message
+    if (message) {
+      showToast(message, type);
+      dispatch(clearToast()); // Clear the toast after showing it
     }
-  }, [message, type, setMessage]); // Dependency array
+  }, [message, type, dispatch]); // Removed setMessage from dependency array
 
   return (
     <div>Dashboard</div>

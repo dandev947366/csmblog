@@ -2,12 +2,14 @@ import { createSlice } from "@reduxjs/toolkit"
 import type { PayloadAction } from "@reduxjs/toolkit"
 
 type ToastType = 'success' | 'error' | 'warning' | null
+
 export interface ToastState {
     message: string,
     type: ToastType
 }
 
-const initialState: ToastType = {
+// Correct the initialState type to match the ToastState interface
+const initialState: ToastState = {
     message: '',
     type: null
 }
@@ -16,7 +18,7 @@ export const toastSlice = createSlice({
     name: 'toast',
     initialState,
     reducers: {
-        setToast: (state, action: PayloadAction<{message: string, type: ToastType}>) => {
+        setToast: (state, action: PayloadAction<{ message: string, type: ToastType }>) => {
             state.message = action.payload.message
             state.type = action.payload.type
         },
@@ -24,8 +26,9 @@ export const toastSlice = createSlice({
             state.message = ''
             state.type = null
         }
-    
     }
 })
 
 export const { setToast, clearToast } = toastSlice.actions
+
+export default toastSlice.reducer
