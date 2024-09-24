@@ -13,10 +13,10 @@ const Layout: React.FC = () => {
   
     useEffect(() => {
       
-      if (message) {
+     
         showToast(message, type);
         dispatch(clearToast());
-      }
+    
     }, [message, type, dispatch]); 
   
     return (
