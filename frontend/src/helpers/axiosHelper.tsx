@@ -2,6 +2,7 @@ import axios from "axios"
 import { toast } from 'react-toastify'
 
 const handleAxiosError = (error: unknown): void => {
+    console.log(error)
     if (axios.isAxiosError(error)) { 
         if (error.response && error.response.data && error.response.data.error) {
             toast.error(error.response.data.error);

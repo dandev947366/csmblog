@@ -7,10 +7,8 @@ import { useDispatch } from "react-redux";
 import { Button } from "@/components/ui/button"
 import { Loader2 } from "lucide-react"
 import { useState } from 'react'
-type Inputs = {
-  email: string;
-  password: string;
-};
+import { setAuthLogin } from "@/redux/slice/authSlice";
+import {Inputs} from "../types/Login"
 const Login = () => {
   const navigate = useNavigate()
   const dispatch = useDispatch()
@@ -21,9 +19,10 @@ const Login = () => {
   const loginHandler: SubmitHandler<Inputs> = async (payload) => {
     setLoading(true)
     try {
-      const logged = await login(payload);
+      const auth = await login(payload);
       dispatch(setToast({ message: "Login Successfully", type:'success'}))
-      logged && navigate('/dashboard')
+      dispatch(setAuthLogin(auth))
+      auth && navigate('/dashboard')
     } catch (error) {
       
     } finally {

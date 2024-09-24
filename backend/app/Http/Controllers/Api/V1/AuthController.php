@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\AuthRequest;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
-
+use App\Http\Resources\UserResource;
 class AuthController extends Controller
 {
     public function __construct()
@@ -26,7 +26,7 @@ class AuthController extends Controller
         if (!$token = auth()->attempt($credentials)) {
             return response()->json(['error' => 'Email or password not correct'], Response::HTTP_UNAUTHORIZED);
         }
-
+        $user = auth()->user();
         $accessTokenCookie = cookie(
             'access_token',
             $token,
@@ -37,12 +37,13 @@ class AuthController extends Controller
             true // HttpOnly cookie
         );
 
-        return $this->respondWithToken($token)->withCookie($accessTokenCookie);
+        return $this->respondWithToken($token, $user)->withCookie($accessTokenCookie);
     }
 
-    protected function respondWithToken($token)
+    protected function respondWithToken($token, $user)
     {
         return response()->json([
+            'user' => new UserResource($user),
             'access_token' => $token,
             'token_type' => 'bearer',
             'expires_in' => auth()->factory()->getTTL() *1
