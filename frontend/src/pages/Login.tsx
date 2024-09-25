@@ -1,7 +1,6 @@
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { login } from "../services/AuthService";
-
 import { setToast } from "../redux/slice/toastSlice";
 import { useDispatch } from "react-redux";
 import { Button } from "@/components/ui/button"
@@ -24,7 +23,7 @@ const Login = () => {
       dispatch(setAuthLogin(auth))
       auth && navigate('/dashboard')
     } catch (error) {
-      
+
     } finally {
       setLoading(false)
     }
@@ -38,42 +37,39 @@ const Login = () => {
         <form onSubmit={handleSubmit(loginHandler)}>
           <div className="mb-4">
             <label htmlFor="email" className="block text-gray-700 text-sm py-2 font-bold">Email:</label>
-            <input 
-              type="text" 
-              id="email" 
-              placeholder="Enter email" 
-              className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring focus:ring-blue-200 h-8" 
-              {...register("email", { required: "Email is required" })} 
+            <input
+              type="text"
+              id="email"
+              placeholder="Enter email"
+              className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring focus:ring-blue-200 h-8"
+              {...register("email", { required: "Email is required" })}
             />
             {errors.email && <span className="text-red-500 text-xs">{errors.email.message}</span>}
           </div>
 
           <div className="mb-4">
             <label htmlFor="password" className="block text-gray-700 text-sm py-2 font-bold">Password:</label>
-            <input 
-              type="password" 
-              id="password" 
-              placeholder="Enter password" 
-              className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring focus:ring-blue-200 h-8" 
-              {...register("password", { required: "Password is required" })} 
+            <input
+              type="password"
+              id="password"
+              placeholder="Enter password"
+              className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring focus:ring-blue-200 h-8"
+              {...register("password", { required: "Password is required" })}
             />
             {errors.password && <span className="text-red-500 text-xs">{errors.password.message}</span>}
           </div>
 
           <div className="mb-6">
-          <Button 
-    disabled={loading} 
-    type="submit" 
+          <Button
+    disabled={loading}
+    type="submit"
     className="text-sm w-full p-2 rounded bg-blue-500 text-white hover:bg-blue-700"
 >
     {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
     {loading ? 'Submitting' : 'Login'}
-  
+
 </Button>
-
-            
           </div>
-
           <p className="text-center text-blue-700"><a href="/">Forgot password?</a></p>
         </form>
       </div>

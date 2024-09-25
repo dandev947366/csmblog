@@ -49,4 +49,13 @@ class AuthController extends Controller
             'expires_in' => auth()->factory()->getTTL() *1
         ]);
     }
+
+    public function me(){
+
+        return response()->json(
+            new UserResource(auth()->user())
+
+        );
+
+    }
 }

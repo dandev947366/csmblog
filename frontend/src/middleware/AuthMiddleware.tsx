@@ -5,15 +5,17 @@ import { useNavigate } from 'react-router-dom'
 type ProtectedRouteProps = PropsWithChildren
 
 const AuthMiddleware = ({children}: ProtectedRouteProps) => {
-    const navigate = useNavigate()
+    // const navigate = useNavigate()
+    // const { isAuthenticated, user } = useSelector((state: RootState) => state.toast);
     
+    // useEffect(()=>{
+    //     if(isAuthenticated || user === null){
+    //         navigate('/admin')
+    //     }
     
-    const { isAuthenticated, user } = useSelector((state: RootState) => state.toast);
-    if(isAuthenticated === false || user === null){
-        navigate('/admin')
-    } else {
-        return children
-    }
+    // }, [isAuthenticated, user])
+    // return isAuthenticated && user ? children : null
+    return children
 }
 
 export default AuthMiddleware
