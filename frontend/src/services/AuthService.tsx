@@ -22,5 +22,6 @@ const fetchUser = async(): Promise<User | null> => {
         handleAxiosError(error)
         return null
     }
+    return null
 }
 export {login, fetchUser}
