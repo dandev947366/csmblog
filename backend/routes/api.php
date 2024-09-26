@@ -10,7 +10,7 @@ use App\Http\Controllers\Api\V1\AuthController;
 
 Route::group([
 
-    'middleware' => 'api',
+    'middleware' => 'jwt',
     'prefix' => 'v1/auth'
 
 ], function ($router) {

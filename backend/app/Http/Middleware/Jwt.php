@@ -15,6 +15,7 @@ class Jwt
      */
     public function handle(Request $request, Closure $next): Response
     {
+        echo 1;die();
         return $next($request);
     }
 }

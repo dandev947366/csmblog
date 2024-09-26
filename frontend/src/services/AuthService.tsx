@@ -23,4 +23,4 @@ const fetchUser = async(): Promise<User | null> => {
         return null
     }
 }
-export {login}
+export {login, fetchUser}
