@@ -15,12 +15,18 @@ import Login from './pages/Login'
 import Dashboard from './pages/Dashboard'
 // import { setToast } from "./redux/slice/toastSlice"
 // import { useDispatch } from "react-redux"
-import AuthMiddleware from './middleware/authMiddleware'
+import AuthMiddleware from './middleware/AuthMiddleware'
+import NoAuthMiddleware from './middleware/NoAuthMiddleware'
+
 import User from './pages/user/User'
 const router = createBrowserRouter([
   {
     path: "/admin",
-     element: <Login />
+     element: (
+      <NoAuthMiddleware>
+        <Login />
+      </NoAuthMiddleware>
+      ),
   },
   {
     path: "/",
@@ -32,18 +38,18 @@ const router = createBrowserRouter([
     children: [
       { path: '/dashboard', element: <Dashboard  />},
       { path: '/user', element: <User  />}
-     
+
     ]
   }
 ])
 createRoot(document.getElementById('root')!).render(
   <Provider store={store}>
-    
-    
+
+
       <RouterProvider router={router}  />
       <ToastContainer  />
-      
 
-    
+
+
   </Provider>,
 )

@@ -23,5 +23,6 @@ const fetchUser = async(): Promise<User | null> => {
         return null
     }
     return null
+    //!SECTION- video 13
 }
 export {login, fetchUser}

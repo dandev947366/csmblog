@@ -3,14 +3,14 @@ import { toast } from 'react-toastify'
 
 const handleAxiosError = (error: unknown): void => {
     console.log(error)
-    if (axios.isAxiosError(error)) { 
+    if (axios.isAxiosError(error)) {
         if (error.response && error.response.data && error.response.data.error) {
-            toast.error(error.response.data.error);
+            console.log(error.response.data.error);
         } else {
-            toast.error("Error. Try again!");
+            console.log("Error. Try again!");
         }
     } else {
-        toast.error("An unknown error occurred.");
+        console.log("An unknown error occurred.");
     }
 }
 

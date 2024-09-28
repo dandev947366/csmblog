@@ -1,21 +1,33 @@
-import { PropsWithChildren } from "react";
+import { PropsWithChildren, useEffect } from "react";
 import { RootState } from "../redux/store";
 import { useSelector, useDispatch } from "react-redux";
-import { useNavigate } from 'react-router-dom'
-type ProtectedRouteProps = PropsWithChildren
+import { useNavigate } from 'react-router-dom';
+import { fetchUser } from '../services/AuthService';
+import { setAuthLogin, setAuthLogout } from '../redux/slice/authSlice';
 
-const AuthMiddleware = ({children}: ProtectedRouteProps) => {
-    // const navigate = useNavigate()
-    // const { isAuthenticated, user } = useSelector((state: RootState) => state.toast);
-    
-    // useEffect(()=>{
-    //     if(isAuthenticated || user === null){
-    //         navigate('/admin')
-    //     }
-    
-    // }, [isAuthenticated, user])
-    // return isAuthenticated && user ? children : null
-    return children
-}
+type ProtectedRouteProps = PropsWithChildren;
 
-export default AuthMiddleware
+const AuthMiddleware = ({ children }: ProtectedRouteProps) => {
+    const navigate = useNavigate();
+    const dispatch = useDispatch();  // Declare dispatch here
+    const { isAuthenticated, user } = useSelector((state: RootState) => state.auth);
+
+    useEffect(() => {
+        const checkAuthenticate = async () => {
+            if (!isAuthenticated || user === null) {
+                const userData = await fetchUser();
+                if (userData) {
+                    dispatch(setAuthLogin(userData));
+                } else {
+                    dispatch(setAuthLogout());
+                    navigate('/admin');
+                }
+            }
+        };
+        checkAuthenticate();
+    }, [isAuthenticated, user, dispatch, navigate]);
+
+    return isAuthenticated && user ? children : null;
+};
+
+export default AuthMiddleware;
