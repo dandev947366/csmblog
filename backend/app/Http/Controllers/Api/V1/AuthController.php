@@ -10,6 +10,9 @@ use Illuminate\Support\Facades\Cookie;
 use Symfony\Component\HttpFoundation\Response;
 use App\Http\Resources\UserResource;
 use Tymon\JWTAuth\Facades\JWTAuth;
+use Tymon\JWTAuth\Exceptions\TokenExpiredException;
+use Tymon\JWTAuth\Exceptions\JWTException;
+use App\Models\User;
 
 class AuthController extends Controller
 {
@@ -33,42 +36,16 @@ class AuthController extends Controller
         $user = auth()->user();
 
         // Create refresh token data
-        $refreshTokenData = [
-            'user_id' => $user->id,
-            'expires_in' => time() + config('jwt.refresh_ttl') * 60, // Converting TTL to seconds
-        ];
+        $refreshTokenData = $this->refreshTokenData($user);
 
         // Encode refresh token
         $refresh_token = JWTAuth::getJWTProvider()->encode($refreshTokenData);
 
-        // Create access token cookie
-        $cookie = Cookie::make(
-            'access_token',
-            $token,
-            auth()->factory()->getTTL() * 60 * 24, // Expiry time in minutes (converted to days)
-            '/',
-            null,
-            true, // Secure flag, set to false for development without HTTPS
-            true, // HttpOnly
-            false, // raw
-            'None' // SameSite attribute
-        );
+        $cookie = $this->setTokenAndRefreshTokenCookie($token, $refreshToken);
+        $tokenCookie = $cookie['tokenCookie'];
+        $refreshCookie = $cookie['refreshTokenCookie'];
+        return $this->respondWithToken($token, $refreshCookie, $user)->withCookie($tokenCookie)->withCookie($refreshCookie);
 
-        // Create refresh token cookie
-        $refreshCookie = Cookie::make(
-            'refresh_token',
-            $refresh_token,
-            config('jwt.refresh_ttl'), // Refresh token TTL in minutes
-            '/',
-            null,
-            true, // Secure flag, set to false for development without HTTPS
-            true, // HttpOnly
-            false, // raw
-            'None' // SameSite attribute
-        );
-
-        // Return response with both cookies
-        return $this->respondWithToken($token, $refresh_token, $user)->withCookie($cookie)->withCookie($refreshCookie);
     }
 
     protected function respondWithToken($token, $refresh_token, $user)
@@ -87,28 +64,89 @@ class AuthController extends Controller
         return response()->json(new UserResource(auth()->user()));
     }
 
-    public function refresh()
+    public function refresh(Request $request)
     {
         try {
             if ($request->hasCookie('access_token')) {
                 $token = $request->cookie('access_token');
-                echo $token;die();
                 $request->headers->set('Authorization', 'Bearer ' . $token);
             }
-            if(!$token){
-                return response()->json(['message'=>'Token is invalid or expired']);
-            }
-            $user = auth()->userOrFail();
-            if(!$user){
-                return response()->json(['message'=>'User not found']);
-            }
+            $user = JWTAuth::parseToken()->authenticate();
+            $token = auth()->refresh();
+
+            $refreshTokenData = $this->refreshTokenData($user);
+            $refreshToken = JWTAuth::getJWTProvider()->encode($refreshTokenData);
+            $cookie = $this->setTokenAndRefreshTokenCookie($token, $refreshToken);
+            $tokenCookie = $cookie['tokenCookie'];
+            $refreshCookie = $cookie['refreshTokenCookie'];
+            return $this->respondWithToken($token, $refreshCookie, $user)->withCookie($tokenCookie)->withCookie($refreshCookie);
         } catch (TokenExpiredException $e) {
+
+            if ($request->hasCookie('refresh_token')) {
+                $refreshTokenCookie = $request->cookie('refresh_token');
+                $refreshTokenDecode = JWTAuth::getJWTProvider()->decode($refreshTokenCookie);
+                $user = User::find($refreshTokenDecode['user_id']);
+                $token = auth()->login($user);
+                // Create refresh token data
+                $refreshTokenData = $this->refreshTokenData($user);
+                // Encode refresh token
+                $refreshToken = JWTAuth::getJWTProvider()->encode($refreshTokenData);
+
+                $cookie = $this->setTokenAndRefreshTokenCookie($token, $refreshToken);
+                $tokenCookie = $cookie['tokenCookie'];
+                $refreshCookie = $cookie['refreshTokenCookie'];
+                return $this->respondWithToken($token, $refreshCookie, $user)->withCookie($tokenCookie)->withCookie($refreshCookie);
+            }
             return response()->json(['message' => 'Token has expired'], 401);
         } catch (JWTException $e) {
             return response()->json(['messagge' => 'Token is invalid', 401]);
         } catch (\Exception $e) {
             return response()->json(['messagge' => 'Token not found', 401]);
         }
-        return $next($request);
+    }
+
+    private function setTokenAndRefreshTokenCookie($token, $refreshToken){
+        $cookie = Cookie::make(
+            'access_token',
+            $token,
+            auth()->factory()->getTTL() * 60 * 24, // Expiry time in minutes (converted to days)
+            '/',
+            null,
+            true, // Secure flag, set to false for development without HTTPS
+            true, // HttpOnly
+            false, // raw
+            'None' // SameSite attribute
+        );
+
+        // Create refresh token cookie
+        $refreshCookie = Cookie::make(
+            'refresh_token',
+            $refreshToken,
+            config('jwt.refresh_ttl'), // Refresh token TTL in minutes
+            '/',
+            null,
+            true, // Secure flag, set to false for development without HTTPS
+            true, // HttpOnly
+            false, // raw
+            'None' // SameSite attribute
+        );
+        return [
+            'tokenCookie' => $cookie,
+            'refreshTokenCookie' => $refreshCookie
+        ];
+
+    }
+
+    private function refreshTokenData($user) {
+        return [
+            'user_id' => $user->id,
+            'expires_in'=>time()+config('jwt.refresh_ttl'),
+            'random' =>time().md5(rand())
+        ];
+    }
+
+    private function refreshToken(){
+
+
     }
 }
