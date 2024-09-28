@@ -20,6 +20,7 @@ class Jwt
         try {
             if ($request->hasCookie('access_token')) {
                 $token = $request->cookie('access_token');
+                echo $token;die();
                 $request->headers->set('Authorization', 'Bearer ' . $token);
             }
             if(!$token){
