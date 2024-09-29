@@ -73,6 +73,7 @@ class AuthController extends Controller
             }
             $user = JWTAuth::parseToken()->authenticate();
             $token = auth()->refresh();
+            auth()->invalidate(true);
 
             $refreshTokenData = $this->refreshTokenData($user);
             $refreshToken = JWTAuth::getJWTProvider()->encode($refreshTokenData);

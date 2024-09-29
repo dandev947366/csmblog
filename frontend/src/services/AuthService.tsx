@@ -17,12 +17,10 @@ const login = async (payload:LoginPayload) : Promise<User | null> => {
 const fetchUser = async(): Promise<User | null> => {
     try{
         const response = await axiosInstance.get('/auth/me')
-        console.log(response)
+        return response.data.user
     } catch (error){
         handleAxiosError(error)
         return null
     }
-    return null
-    //!SECTION- video 13
 }
 export {login, fetchUser}

@@ -15,10 +15,10 @@ const Layout: React.FC = () => {
     useEffect(() => {
     }, [message, type]);
     return (
-        <>
+        <div className="page">
             Main layout of components
             <Outlet />
-        </>
+        </div>
     )
 }
 export default Layout
