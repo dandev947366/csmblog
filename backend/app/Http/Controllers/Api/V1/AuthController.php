@@ -39,7 +39,7 @@ class AuthController extends Controller
         $refreshTokenData = $this->refreshTokenData($user);
 
         // Encode refresh token
-        $refresh_token = JWTAuth::getJWTProvider()->encode($refreshTokenData);
+        $refreshToken = JWTAuth::getJWTProvider()->encode($refreshTokenData);
 
         $cookie = $this->setTokenAndRefreshTokenCookie($token, $refreshToken);
         $tokenCookie = $cookie['tokenCookie'];
@@ -85,23 +85,26 @@ class AuthController extends Controller
             if ($request->hasCookie('refresh_token')) {
                 $refreshTokenCookie = $request->cookie('refresh_token');
                 $refreshTokenDecode = JWTAuth::getJWTProvider()->decode($refreshTokenCookie);
-                $user = User::find($refreshTokenDecode['user_id']);
-                $token = auth()->login($user);
-                // Create refresh token data
-                $refreshTokenData = $this->refreshTokenData($user);
-                // Encode refresh token
-                $refreshToken = JWTAuth::getJWTProvider()->encode($refreshTokenData);
 
-                $cookie = $this->setTokenAndRefreshTokenCookie($token, $refreshToken);
-                $tokenCookie = $cookie['tokenCookie'];
-                $refreshCookie = $cookie['refreshTokenCookie'];
-                return $this->respondWithToken($token, $refreshCookie, $user)->withCookie($tokenCookie)->withCookie($refreshCookie);
+                if($refreshTokenDecode['expires_in'] < time()){
+                    $user = User::find($refreshTokenDecode['user_id']);
+                    $token = auth()->login($user);
+                    // Create refresh token data
+                    $refreshTokenData = $this->refreshTokenData($user);
+                    // Encode refresh token
+                    $refreshToken = JWTAuth::getJWTProvider()->encode($refreshTokenData);
+
+                    $cookie = $this->setTokenAndRefreshTokenCookie($token, $refreshToken);
+                    $tokenCookie = $cookie['tokenCookie'];
+                    $refreshCookie = $cookie['refreshTokenCookie'];
+                    return $this->respondWithToken($token, $refreshCookie, $user)->withCookie($tokenCookie)->withCookie($refreshCookie);
+                }
             }
-            return response()->json(['message' => 'Token has expired'], 401);
+            return response()->json(['message' => 'Token has expired'], Response::HTTP_UNAUTHORIZED);
         } catch (JWTException $e) {
-            return response()->json(['messagge' => 'Token is invalid', 401]);
+            return response()->json(['messagge' => 'Token is invalid', Response::HTTP_UNAUTHORIZED]);
         } catch (\Exception $e) {
-            return response()->json(['messagge' => 'Token not found', 401]);
+            return response()->json(['messagge' => 'Token not found', Response::HTTP_UNAUTHORIZED]);
         }
     }
 
