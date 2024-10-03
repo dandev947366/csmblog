@@ -7,6 +7,7 @@ import { clearToast } from "../redux/slice/toastSlice";
 import { fetchUser } from "../services/AuthService"
 import Header from "./header"
 import Aside from './aside';
+import "../assets/scss/Style.scss"
 const Layout: React.FC = () => {
     const { message, type } = useSelector((state: RootState) => state.toast);
     const dispatch = useDispatch();
@@ -21,9 +22,9 @@ const Layout: React.FC = () => {
             {/* <Header  /> */}
             <Aside  />
 
-            {/* <div className="main-content">
+            <div className="main-content">
                 <Outlet />
-            </div> */}
+            </div>
         </div>
     )
 }
