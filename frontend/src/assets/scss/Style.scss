@@ -7,7 +7,18 @@ body{
 
     .app-header{
         padding-left: 240px;
+        .header-right-content{
+            .header-link{
+                padding: 1rem 0.65rem;
+                .header-link-icon{
+                    width: 17px;
+                    height: 17px;
+                    font-size: 20px;
+                    color: #536485;
+                }
+            }
 
+        }
     }
 
 }

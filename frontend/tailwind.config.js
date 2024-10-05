@@ -14,6 +14,7 @@ export default {
   		},
   		fontSize: {
   			'14px': '14px',
+  			'25px' : '25px',
   			'30px': '30px'
   		},
   		padding: {
@@ -21,6 +22,21 @@ export default {
   		},
   		width: {
 			'32px': '32px'
+		},
+		spacing: {
+			'1px' : '1px',
+			'2px' : '2px',
+			'3px' : '3px',
+			'4px' : '4px',
+			'5px' : '5px',
+			'6px' : '6px',
+			'7px' : '7px',
+			'8px' : '8px',
+			'9px' : '9px',
+			'10px' : '10px',
+			'15px' : '15px',
+			'20px' : '20px',
+
 		},
   		colors: {
   			background: 'hsl(var(--background))',
@@ -55,6 +71,15 @@ export default {
   				DEFAULT: 'hsl(var(--accent))',
   				foreground: 'hsl(var(--accent-foreground))'
   			},
+			card: {
+			DEFAULT:"hsl(var(--card))",
+			foreground: "hsl(--card-foreground)"
+			},
+			'menu-border': 'rgba(255, 255, 255, 0.1)',
+			'menu-active': 'rgba(255, 255, 255, 0.05)',
+			'primary' :'rgba(132, 90, 223, 1)',
+			'second' : 'rgba(35, 183, 229, 1)',
+
   			destructive: {
   				DEFAULT: 'hsl(var(--destructive))',
   				foreground: 'hsl(var(--destructive-foreground))'
