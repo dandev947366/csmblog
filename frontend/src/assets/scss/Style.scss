@@ -1,8 +1,10 @@
 body{
     background: rgb(240, 241, 247, 1) !important;
+    font-family: "Roboto Flex" sans-serif;
     .main-content{
         margin-left: 240px;
         padding-left: 0px 10px;
+        height: calc( 100vh - 50px );
     }
 
     .app-header{

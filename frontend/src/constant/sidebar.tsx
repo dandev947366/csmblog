@@ -24,8 +24,8 @@ export const sidebarItem = [
                 active: ['user'],
                 label: "Users",
                 links: [
-                    { title: 'User catalogue', to: '/user/catelogue' },
-                    { title: 'Manage user', to: '/user' }
+                    { title: 'User catalogue', to: '/user/catelogue/index' },
+                    { title: 'Manage user', to: '/user/index' }
                 ]
             }
         ],

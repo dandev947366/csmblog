@@ -1,16 +1,16 @@
-// import { useEffect } from 'react'
-// import { RootState } from "../redux/store";
-// import { useSelector } from "react-redux";
+import {Breadcrumb } from "../components/ui/breadcrumb"
+import PageHeading from "../components/heading"
 function Dashboard() {
-  // const { isAuthenticated, user } = useSelector((state: RootState) => state.toast);
-  
-  // useEffect(()=>{
-  //   console.log(isAuthenticated, user)
-  
-  // }, [isAuthenticated, user])
+  const breadcrumb = {
+    title: 'Report',
+    route: '/dashboard'
+
+  }
   return (
-  
-    <div>Dashboard</div>
+
+    <div>
+    <PageHeading breadcrumb={breadcrumb} />
+    </div>
   );
 }
 
