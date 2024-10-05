@@ -13,8 +13,15 @@ export default {
   			sm: 'calc(var(--radius) - 4px)'
   		},
   		fontSize: {
-  			'14px': '14px'
+  			'14px': '14px',
+  			'30px': '30px'
   		},
+  		padding: {
+  		    '15px': '15px'
+  		},
+  		width: {
+			'32px': '32px'
+		},
   		colors: {
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',

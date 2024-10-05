@@ -19,7 +19,7 @@ const Layout: React.FC = () => {
     }, [message, type]);
     return (
         <div className="page">
-            {/* <Header  /> */}
+            <Header />
             <Aside  />
 
             <div className="main-content">

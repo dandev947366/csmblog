@@ -1,4 +1,13 @@
-.main-content{
-    margin-left: 240px;
-    padding-left: 10px;
+body{
+    background: rgb(240, 241, 247, 1) !important;
+    .main-content{
+        margin-left: 240px;
+        padding-left: 0px 10px;
+    }
+
+    .app-header{
+        padding-left: 240px;
+
+    }
+
 }
