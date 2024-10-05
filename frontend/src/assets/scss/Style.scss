@@ -5,6 +5,9 @@ body{
         margin-left: 240px;
         padding-left: 0px 10px;
         height: calc( 100vh - 50px );
+        .container{
+            padding: 0 15px;
+        }
     }
 
     .app-header{
