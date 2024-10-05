@@ -1,33 +1,33 @@
-import { FaHome, FaUser } from "react-icons/fa"
+import { FaHome, FaUser } from "react-icons/fa";
 
-
-export const sideabarItem = [
+// No JSX here, just references to the icon components
+export const sidebarItem = [
     {
-        'label':'MAIN',
-        'items':[
+        label: 'MAIN',
+        items: [
             {
-                icon: <FaHome className="text-sm mr-2"  />,
+                icon: FaHome, // React component reference, not JSX (<FaHome />)
+                active: ['dashboard'],
                 label: "Dashboard",
-                links:[
-                    {title: 'Main dashboard', to: '/dashboard'},
-                    {title: 'Order dashboard', to: '/dashboard/order'}
-
+                links: [
+                    { title: 'Main dashboard', to: '/dashboard' },
+                    { title: 'Order dashboard', to: '/dashboard/order' }
                 ]
             }
         ],
     },
     {
-        'label':'FUNCTION',
-        'items':[
+        label: 'FUNCTION',
+        items: [
             {
-                icon: <FaUser className="text-sm mr-2"  />,
+                icon: FaUser,
+                active: ['user'],
                 label: "Users",
-                links:[
-                    {title: 'User catelogue', to: '/user/catelogue'},
-                    {title: 'Manage user', to: '/user'}
-
+                links: [
+                    { title: 'User catalogue', to: '/user/catelogue' },
+                    { title: 'Manage user', to: '/user' }
                 ]
             }
         ],
     }
-]
+];
