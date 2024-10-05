@@ -1,12 +1,26 @@
-import { HiOutlineBars3CenterLeft } from "react-icons/hi2";
+import { HiOutlineBars3CenterLeft, HiOutlineCog6Tooth } from "react-icons/hi2";
 import { IoIosSearch } from "react-icons/io";
 import { FiShoppingCart } from "react-icons/fi";
 import { GoBell } from "react-icons/go";
-import { IoGridOutline } from "react-icons/io5";
+import { IoGridOutline, IoExitOutline } from "react-icons/io5";
 import { BsFullscreenExit } from "react-icons/bs";
 import { Link } from "react-router-dom";
-
+import { CgProfile } from "react-icons/cg";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from "@/components/ui/avatar"
 function Header() {
+
   return (
     <div className="app-header h-14 fixed w-full content-center top-0 bg-white">
       <div className="main-header mx-auto px-15px h-full flex items-stretch justify-between">
@@ -31,10 +45,36 @@ function Header() {
                 <IoGridOutline className="cursor-pointer header-link-icon" />
               </Link>
             </div>
-            <div className="fullscreen-dropdown">
+            <div className="fullscreen">
               <Link to="/" className="header-link flex">
                 <BsFullscreenExit className="cursor-pointer header-link-icon" />
               </Link>
+            </div>
+            <div className="profile">
+              <DropdownMenu className="outline-none">
+                <DropdownMenuTrigger className="flex">
+                  <Avatar className="mr-4">
+                    <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+                    <AvatarFallback>CN</AvatarFallback>
+                  </Avatar>
+                  <div className="profile-content text-left">
+                    <div className="font-semibold">Dan Le</div>
+                    <div className="role text-xs text-[#536485]">Administrator</div>
+                  </div>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="top-10">
+                  <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem className="flex items-center text-[#333335] cursor-pointer"><CgProfile className="mr-2 text-[18px]" />Profile</DropdownMenuItem>
+                  <DropdownMenuItem className="flex items-center text-[#333335] cursor-pointer"><IoExitOutline className="mr-2 text-[18px]" />Logout</DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+              <div className="header-setting">
+                <div className="header-link flex">
+                  <HiOutlineCog6Tooth className="header-link-icon cursor-pointer animate-spin spin-low" />
+
+                </div>
+              </div>
             </div>
           </div>
         </div>
