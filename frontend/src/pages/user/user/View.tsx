@@ -9,6 +9,10 @@ import { Switch } from "../../../components/ui/switch"
 import { Button } from "../../../components/ui/button"
 import {Link} from "react-router-dom"
 import { FaEdit } from "react-icons/fa";
+import { RiDeleteBin5Line } from "react-icons/ri";
+import { MdLockReset } from "react-icons/md";
+
+
 import {
   Card,
   CardContent,
@@ -75,6 +79,12 @@ function User() {
                   <TableCell>
                   <Button variant="outline" className="bg-primary">
                   <Link to="user/update"><FaEdit className="text-white" /></Link>
+                  </Button>
+                  <Button variant="outline" className="bg-[#ec4758]">
+                  <Link to="user/delete"><RiDeleteBin5Line className="text-white" /></Link>
+                  </Button>
+                  <Button variant="outline" className="bg-[#f8ac59]">
+                  <Link to="user/reset"><MdLockReset className="text-white" /></Link>
                   </Button>
                   </TableCell>
 
