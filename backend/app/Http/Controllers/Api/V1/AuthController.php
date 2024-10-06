@@ -64,50 +64,123 @@ class AuthController extends Controller
         return response()->json(new UserResource(auth()->user()));
     }
 
+    // public function refresh(Request $request)
+    // {
+    //     try {
+    //         if ($request->hasCookie('access_token')) {
+    //             $token = $request->cookie('access_token');
+    //             $request->headers->set('Authorization', 'Bearer ' . $token);
+    //         }
+    //         $user = JWTAuth::parseToken()->authenticate();
+    //         $token = auth()->refresh();
+    //         auth()->invalidate(true);
+
+    //         $refreshTokenData = $this->refreshTokenData($user);
+    //         $refreshToken = JWTAuth::getJWTProvider()->encode($refreshTokenData);
+    //         $cookie = $this->setTokenAndRefreshTokenCookie($token, $refreshToken);
+    //         $tokenCookie = $cookie['tokenCookie'];
+    //         $refreshCookie = $cookie['refreshTokenCookie'];
+    //         return $this->respondWithToken($token, $refreshCookie, $user)->withCookie($tokenCookie)->withCookie($refreshCookie);
+    //     } catch (TokenExpiredException $e) {
+
+    //         if ($request->hasCookie('refresh_token')) {
+    //             $refreshTokenCookie = $request->cookie('refresh_token');
+    //             $refreshTokenDecode = JWTAuth::getJWTProvider()->decode($refreshTokenCookie);
+
+    //             if($refreshTokenDecode['expires_in'] < time()){
+    //                 $user = User::find($refreshTokenDecode['user_id']);
+    //                 $token = auth()->login($user);
+    //                 // Create refresh token data
+    //                 $refreshTokenData = $this->refreshTokenData($user);
+    //                 // Encode refresh token
+    //                 $refreshToken = JWTAuth::getJWTProvider()->encode($refreshTokenData);
+
+    //                 $cookie = $this->setTokenAndRefreshTokenCookie($token, $refreshToken);
+    //                 $tokenCookie = $cookie['tokenCookie'];
+    //                 $refreshCookie = $cookie['refreshTokenCookie'];
+    //                 return $this->respondWithToken($token, $refreshCookie, $user)->withCookie($tokenCookie)->withCookie($refreshCookie);
+    //             }
+    //         }
+    //         return response()->json(['message' => 'Token has expired'], Response::HTTP_UNAUTHORIZED);
+    //     } catch (JWTException $e) {
+    //         return response()->json(['messagge' => 'Token is invalid', Response::HTTP_UNAUTHORIZED]);
+    //     } catch (\Exception $e) {
+    //         return response()->json(['messagge' => 'Token not found', Response::HTTP_UNAUTHORIZED]);
+    //     }
+    // }
+
+
     public function refresh(Request $request)
-    {
-        try {
-            if ($request->hasCookie('access_token')) {
-                $token = $request->cookie('access_token');
-                $request->headers->set('Authorization', 'Bearer ' . $token);
-            }
-            $user = JWTAuth::parseToken()->authenticate();
-            $token = auth()->refresh();
-            auth()->invalidate(true);
-
-            $refreshTokenData = $this->refreshTokenData($user);
-            $refreshToken = JWTAuth::getJWTProvider()->encode($refreshTokenData);
-            $cookie = $this->setTokenAndRefreshTokenCookie($token, $refreshToken);
-            $tokenCookie = $cookie['tokenCookie'];
-            $refreshCookie = $cookie['refreshTokenCookie'];
-            return $this->respondWithToken($token, $refreshCookie, $user)->withCookie($tokenCookie)->withCookie($refreshCookie);
-        } catch (TokenExpiredException $e) {
-
-            if ($request->hasCookie('refresh_token')) {
-                $refreshTokenCookie = $request->cookie('refresh_token');
-                $refreshTokenDecode = JWTAuth::getJWTProvider()->decode($refreshTokenCookie);
-
-                if($refreshTokenDecode['expires_in'] < time()){
-                    $user = User::find($refreshTokenDecode['user_id']);
-                    $token = auth()->login($user);
-                    // Create refresh token data
-                    $refreshTokenData = $this->refreshTokenData($user);
-                    // Encode refresh token
-                    $refreshToken = JWTAuth::getJWTProvider()->encode($refreshTokenData);
-
-                    $cookie = $this->setTokenAndRefreshTokenCookie($token, $refreshToken);
-                    $tokenCookie = $cookie['tokenCookie'];
-                    $refreshCookie = $cookie['refreshTokenCookie'];
-                    return $this->respondWithToken($token, $refreshCookie, $user)->withCookie($tokenCookie)->withCookie($refreshCookie);
-                }
-            }
-            return response()->json(['message' => 'Token has expired'], Response::HTTP_UNAUTHORIZED);
-        } catch (JWTException $e) {
-            return response()->json(['messagge' => 'Token is invalid', Response::HTTP_UNAUTHORIZED]);
-        } catch (\Exception $e) {
-            return response()->json(['messagge' => 'Token not found', Response::HTTP_UNAUTHORIZED]);
+{
+    try {
+        // Check for access token in cookies
+        if ($request->hasCookie('access_token')) {
+            $token = $request->cookie('access_token');
+            $request->headers->set('Authorization', 'Bearer ' . $token);
         }
+
+        // Authenticate user with the token
+        $user = JWTAuth::parseToken()->authenticate();
+
+        // Refresh the token and invalidate the old one
+        $token = auth()->refresh();
+        auth()->invalidate(true);
+
+        // Generate new refresh token data
+        $refreshTokenData = $this->refreshTokenData($user);
+        $refreshToken = JWTAuth::getJWTProvider()->encode($refreshTokenData);
+
+        // Set cookies for the new tokens
+        $cookies = $this->setTokenAndRefreshTokenCookie($token, $refreshToken);
+        $tokenCookie = $cookies['tokenCookie'];
+        $refreshCookie = $cookies['refreshTokenCookie'];
+
+        // Respond with new tokens and cookies
+        return $this->respondWithToken($token, $refreshCookie, $user)
+                    ->withCookie($tokenCookie)
+                    ->withCookie($refreshCookie);
+
+    } catch (TokenExpiredException $e) {
+        // Handle expired token scenario
+        if ($request->hasCookie('refresh_token')) {
+            $refreshTokenCookie = $request->cookie('refresh_token');
+            $refreshTokenDecode = JWTAuth::getJWTProvider()->decode($refreshTokenCookie);
+
+            // Check if refresh token is expired
+            if ($refreshTokenDecode['expires_in'] < time()) {
+                $user = User::find($refreshTokenDecode['user_id']);
+                if (!$user) {
+                    return response()->json(['message' => 'User not found'], Response::HTTP_UNAUTHORIZED);
+                }
+
+                // Generate new token and refresh token
+                $token = auth()->login($user);
+                $refreshTokenData = $this->refreshTokenData($user);
+                $refreshToken = JWTAuth::getJWTProvider()->encode($refreshTokenData);
+
+                // Set cookies for the new tokens
+                $cookies = $this->setTokenAndRefreshTokenCookie($token, $refreshToken);
+                $tokenCookie = $cookies['tokenCookie'];
+                $refreshCookie = $cookies['refreshTokenCookie'];
+
+                return $this->respondWithToken($token, $refreshCookie, $user)
+                            ->withCookie($tokenCookie)
+                            ->withCookie($refreshCookie);
+            }
+        }
+
+        // If no refresh token available or it's expired
+        return response()->json(['message' => 'Token has expired'], Response::HTTP_UNAUTHORIZED);
+
+    } catch (JWTException $e) {
+        // Handle JWT exceptions
+        return response()->json(['message' => 'Token is invalid'], Response::HTTP_UNAUTHORIZED);
+
+    } catch (\Exception $e) {
+        // General error handling
+        return response()->json(['message' => 'Token not found'], Response::HTTP_UNAUTHORIZED);
     }
+}
 
     private function setTokenAndRefreshTokenCookie($token, $refreshToken){
         $cookie = Cookie::make(

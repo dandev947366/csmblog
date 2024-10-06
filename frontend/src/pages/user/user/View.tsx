@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { RootState } from "../../../redux/store";
 import { useSelector, useDispatch } from "react-redux";
 import { showToast } from "../../../helpers/myHelper";
@@ -11,7 +11,7 @@ import {Link} from "react-router-dom"
 import { FaEdit } from "react-icons/fa";
 import { RiDeleteBin5Line } from "react-icons/ri";
 import { MdLockReset } from "react-icons/md";
-
+import { useQuery } from 'react-query';
 import {
   Card,
   CardContent,
@@ -29,7 +29,7 @@ import {
   TableHeader,
   TableRow,
 } from "../../../components/ui/table"
-
+import {pagination} from "../../../services/UserService"
 interface PageHeadingProps {
   title: string,
   to: string
@@ -39,6 +39,7 @@ function User() {
     title: 'Manage user',
     route: '/user/index'
   }
+  const { data } = useQuery('users', pagination)
 
   return (
     <div>
