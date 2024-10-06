@@ -3,13 +3,13 @@ import {
     AccordionContent,
     AccordionItem,
     AccordionTrigger,
-} from "@/components/ui/accordion"
+} from "../components/ui/accordion"
 import "../assets/scss/Accordion.scss"
 import { Link } from "react-router-dom";
-import { FaHome, FaUser, FaCube } from "react-icons/fa";
+// import { FaHome, FaUser, FaCube } from "react-icons/fa";
 import { sidebarItem } from '../constant/sidebar';
 import { useLocation } from "react-router-dom";
-import { useEffect } from "react";
+// import { useEffect } from "react";
 
 function Aside() {
     const location = useLocation()
@@ -30,9 +30,7 @@ function Aside() {
 
     }
     const defaultValue = getOpenAccordianValue()
-    console.log(defaultValue);
-
-
+    // console.log(defaultValue);
     return (
         <div className="app-aside bg-[#111c43] w-60 h-full z-10 fixed top-0">
             <div className="main-sidebar-header">
@@ -78,13 +76,7 @@ function Aside() {
                         </div>
                     ))}
                 </div>
-
             </div>
-
-
-
-
-
         </div>
     )
 }

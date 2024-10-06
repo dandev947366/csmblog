@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Exceptions\TokenExpiredException;
+use Tymon\JWTAuth\Facades\JWTAuth;
 class Jwt
 {
     /**
@@ -19,13 +20,13 @@ class Jwt
         try {
             if ($request->hasCookie('access_token')) {
                 $token = $request->cookie('access_token');
-                echo $token;die();
                 $request->headers->set('Authorization', 'Bearer ' . $token);
             }
             if(!$token){
                 return response()->json(['message'=>'Token is invalid or expired']);
             }
-            $user = auth()->userOrFail();
+            // $user = auth()->userOrFail();
+            $user = JWTAuth::parseToken()->authenticate();
             if(!$user){
                 return response()->json(['message'=>'User not found']);
             }

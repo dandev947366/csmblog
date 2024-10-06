@@ -3,31 +3,30 @@ import { useNavigate } from "react-router-dom";
 import { login } from "../services/AuthService";
 import { setToast } from "../redux/slice/toastSlice";
 import { useDispatch } from "react-redux";
-import { Button } from "@/components/ui/button"
-import { Loader2 } from "lucide-react"
-import { useState } from 'react'
+import { Button } from "@/components/ui/button";
+import { Loader2 } from "lucide-react";
+import { useState } from 'react';
 import { setAuthLogin } from "@/redux/slice/authSlice";
-import {Inputs} from "../types/Login"
+import { Inputs } from "../types/Login";
+
 const Login = () => {
-  const navigate = useNavigate()
-  const dispatch = useDispatch()
-  // const { setMessage } = useToast();
-  const [loading, setLoading] = useState<boolean>(false)
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const [loading, setLoading] = useState<boolean>(false);
   const { register, handleSubmit, formState: { errors } } = useForm<Inputs>();
 
   const loginHandler: SubmitHandler<Inputs> = async (payload) => {
-    setLoading(true)
+    setLoading(true);
     try {
       const auth = await login(payload);
-      dispatch(setToast({ message: "Login Successfully", type:'success'}))
-      dispatch(setAuthLogin(auth))
-      auth && navigate('/dashboard')
+      dispatch(setToast({ message: "Login Successfully", type: 'success' }));
+      dispatch(setAuthLogin(auth));
+      auth && navigate('/dashboard');
     } catch (error) {
-
+      dispatch(setToast({ message: "Login failed. Please try again.", type: 'error' }));
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-
   };
 
   return (
@@ -42,7 +41,10 @@ const Login = () => {
               id="email"
               placeholder="Enter email"
               className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring focus:ring-blue-200 h-8"
-              {...register("email", { required: "Email is required" })}
+              {...register("email", {
+                required: "Email is required",
+                pattern: { value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, message: "Invalid email format" }
+              })}
             />
             {errors.email && <span className="text-red-500 text-xs">{errors.email.message}</span>}
           </div>
@@ -60,15 +62,14 @@ const Login = () => {
           </div>
 
           <div className="mb-6">
-          <Button
-    disabled={loading}
-    type="submit"
-    className="text-sm w-full p-2 rounded bg-blue-500 text-white hover:bg-blue-700"
->
-    {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-    {loading ? 'Submitting' : 'Login'}
-
-</Button>
+            <Button
+              disabled={loading}
+              type="submit"
+              className="text-sm w-full p-2 rounded bg-blue-500 text-white hover:bg-blue-700"
+            >
+              {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+              {loading ? 'Submitting' : 'Login'}
+            </Button>
           </div>
           <p className="text-center text-blue-700"><a href="/">Forgot password?</a></p>
         </form>

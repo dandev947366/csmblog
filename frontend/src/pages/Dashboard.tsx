@@ -1,4 +1,3 @@
-import {Breadcrumb } from "../components/ui/breadcrumb"
 import PageHeading from "../components/heading"
 function Dashboard() {
   const breadcrumb = {

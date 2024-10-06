@@ -13,7 +13,6 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 use Tymon\JWTAuth\Exceptions\TokenExpiredException;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use App\Models\User;
-
 class UserController extends Controller
 {
     public function __construct() {}

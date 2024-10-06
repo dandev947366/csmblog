@@ -39,7 +39,19 @@ function User() {
     title: 'Manage user',
     route: '/user/index'
   }
-  const { data } = useQuery('users', pagination)
+
+  const { data, isLoading, error } = useQuery('users', pagination);
+
+  // Handle loading state
+  if (isLoading) {
+    return <div>Loading users...</div>;
+  }
+
+  // Handle error state
+  if (error) {
+    return <div>Error loading users: {error.message}</div>;
+  }
+
 
   return (
     <div>
