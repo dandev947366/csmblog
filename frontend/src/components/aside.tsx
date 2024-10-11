@@ -13,7 +13,7 @@ import { useLocation } from "react-router-dom";
 
 function Aside() {
     const location = useLocation()
-    console.log(location)
+    // console.log(location)
     const segment = location.pathname
 
     const getOpenAccordianValue = () => {
@@ -24,10 +24,8 @@ function Aside() {
                 if (item.active.includes(segment)) {
                     return `item-${groupIndex}-${itemIndex}`
                 }
-
             }
         }
-
     }
     const defaultValue = getOpenAccordianValue()
     // console.log(defaultValue);

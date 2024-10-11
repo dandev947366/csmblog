@@ -37,7 +37,7 @@ const Login = () => {
           <div className="mb-4">
             <label htmlFor="email" className="block text-gray-700 text-sm py-2 font-bold">Email:</label>
             <input
-              type="text"
+              type="email"
               id="email"
               placeholder="Enter email"
               className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring focus:ring-blue-200 h-8"
@@ -48,7 +48,6 @@ const Login = () => {
             />
             {errors.email && <span className="text-red-500 text-xs">{errors.email.message}</span>}
           </div>
-
           <div className="mb-4">
             <label htmlFor="password" className="block text-gray-700 text-sm py-2 font-bold">Password:</label>
             <input
@@ -60,7 +59,6 @@ const Login = () => {
             />
             {errors.password && <span className="text-red-500 text-xs">{errors.password.message}</span>}
           </div>
-
           <div className="mb-6">
             <Button
               disabled={loading}

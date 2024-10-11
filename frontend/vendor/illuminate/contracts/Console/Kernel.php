@@ -61,4 +61,6 @@ interface Kernel
      * @return void
      */
     public function terminate($input, $status);
+
+
 }

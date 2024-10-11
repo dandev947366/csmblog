@@ -1,12 +1,11 @@
 import { FaHome, FaUser } from "react-icons/fa";
 
-// No JSX here, just references to the icon components
 export const sidebarItem = [
     {
         label: 'MAIN',
         items: [
             {
-                icon: FaHome, // React component reference, not JSX (<FaHome />)
+                icon: FaHome,
                 active: ['dashboard'],
                 label: "Dashboard",
                 links: [

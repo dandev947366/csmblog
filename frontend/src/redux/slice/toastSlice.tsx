@@ -8,7 +8,6 @@ export interface ToastState {
     type: ToastType
 }
 
-// Correct the initialState type to match the ToastState interface
 const initialState: ToastState = {
     message: '',
     type: null

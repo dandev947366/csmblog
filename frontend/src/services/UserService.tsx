@@ -1,7 +1,7 @@
-import axios from "../configs/axios"
+import axios from "../configs/axios";
 const pagination = async () => {
     const response = await axios.get('/users');
-    console.log('Response from UserService: ',response); // Log the entire response object
-    //return response.data; // Return the full data for further inspection
-}
-export {pagination}
+    console.log('API Response:', response.data);
+    // return response.data;
+};
+export { pagination };

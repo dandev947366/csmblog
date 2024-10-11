@@ -6,7 +6,7 @@ interface Kernel
 {
     protected $middleware = [
         \App\Http\Middleware\CorsMiddleware::class,
-        // other middleware...
+        \Fruitcake\Cors\HandleCors::class,
     ];
     /**
      * Bootstrap the application for HTTP requests.

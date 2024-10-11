@@ -7,7 +7,7 @@ import PageHeading from "../../../components/heading"
 import { Checkbox } from "../../../components/ui/checkbox"
 import { Switch } from "../../../components/ui/switch"
 import { Button } from "../../../components/ui/button"
-import {Link} from "react-router-dom"
+import { Link } from "react-router-dom"
 import { FaEdit } from "react-icons/fa";
 import { RiDeleteBin5Line } from "react-icons/ri";
 import { MdLockReset } from "react-icons/md";
@@ -29,7 +29,8 @@ import {
   TableHeader,
   TableRow,
 } from "../../../components/ui/table"
-import {pagination} from "../../../services/UserService"
+import { pagination } from "../../../services/UserService"
+
 interface PageHeadingProps {
   title: string,
   to: string
@@ -40,18 +41,7 @@ function User() {
     route: '/user/index'
   }
 
-  const { data, isLoading, error } = useQuery('users', pagination);
-
-  // Handle loading state
-  if (isLoading) {
-    return <div>Loading users...</div>;
-  }
-
-  // Handle error state
-  if (error) {
-    return <div>Error loading users: {error.message}</div>;
-  }
-
+  const { data } = useQuery('users', pagination);
 
   return (
     <div>
@@ -67,7 +57,7 @@ function User() {
               <TableCaption>A list of your recent invoices.</TableCaption>
               <TableHeader>
                 <TableRow>
-                <TableHead><Checkbox className="text-white border-solid border-[#cac8c8]"  /></TableHead>
+                  <TableHead><Checkbox className="text-white border-solid border-[#cac8c8]" /></TableHead>
                   <TableHead>ID</TableHead>
                   <TableHead>Full name</TableHead>
                   <TableHead>Email</TableHead>
@@ -80,30 +70,28 @@ function User() {
               </TableHeader>
               <TableBody>
                 <TableRow>
-                <TableCell><Checkbox className="text-white mr-1 border-solid border-[#cac8c8]"  /></TableCell>
+                  <TableCell><Checkbox className="text-white mr-1 border-solid border-[#cac8c8]" /></TableCell>
                   <TableCell className="font-medium">HT000001</TableCell>
                   <TableCell>Dan Le</TableCell>
-                  <TableCell>dan.dev947366@gmail.com</TableCell>
                   <TableCell>013 123 1234</TableCell>
                   <TableCell>Helsinki, Finland</TableCell>
-                  <TableCell>Administrator</TableCell>
                   <TableCell><Switch /></TableCell>
+                  <TableCell>Administrator</TableCell>
+                  <TableCell>Active</TableCell>
                   <TableCell>
-                  <Button variant="outline" className="bg-primary">
-                  <Link to="user/update"><FaEdit className="text-white" /></Link>
-                  </Button>
-                  <Button variant="outline" className="bg-[#ec4758]">
-                  <Link to="user/delete"><RiDeleteBin5Line className="text-white" /></Link>
-                  </Button>
-                  <Button variant="outline" className="bg-[#f8ac59]">
-                  <Link to="user/reset"><MdLockReset className="text-white" /></Link>
-                  </Button>
+                    <Button variant="outline" className="bg-primary">
+                      <Link to="user/update"><FaEdit className="text-white" /></Link>
+                    </Button>
+                    <Button variant="outline" className="bg-[#ec4758]">
+                      <Link to="user/delete"><RiDeleteBin5Line className="text-white" /></Link>
+                    </Button>
+                    <Button variant="outline" className="bg-[#f8ac59]">
+                      <Link to="user/reset"><MdLockReset className="text-white" /></Link>
+                    </Button>
                   </TableCell>
-
                 </TableRow>
               </TableBody>
             </Table>
-
           </CardContent>
           <CardFooter>
             <p>Card Footer</p>

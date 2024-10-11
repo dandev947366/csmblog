@@ -29,7 +29,6 @@ export const showToast = (
     message: string,
     type: ToastType,
 ) => {
-    
     if(message){
         switch (type) {
             case 'success':
@@ -44,6 +43,5 @@ export const showToast = (
             default:
                 break;
         }
-       
     }
 }

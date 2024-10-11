@@ -1,4 +1,3 @@
-
 import { createRoot } from 'react-dom/client'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
@@ -38,7 +37,6 @@ const router = createBrowserRouter([
     children: [
       { path: '/dashboard', element: <Dashboard /> },
       { path: '/user/index', element: <User /> }
-
     ]
   }
 ])

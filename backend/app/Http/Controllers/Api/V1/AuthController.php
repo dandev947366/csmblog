@@ -11,7 +11,6 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 use Tymon\JWTAuth\Exceptions\TokenExpiredException;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use App\Models\User;
-
 class AuthController extends Controller
 {
     public function __construct()
@@ -35,7 +34,6 @@ class AuthController extends Controller
     }
     public function login(Request $request)
     {
-        // Validate the request
         $request->validate([
             'email' => 'required|email',
             'password' => 'required|min:6',
@@ -44,42 +42,33 @@ class AuthController extends Controller
         if (!$token = JWTAuth::attempt($request->only('email', 'password'))) {
             return response()->json(['error' => 'invalid_credentials'], 401);
         }
-        $user = auth()->user(); // Get the authenticated user
-        // Generate a refresh token
+        $user = auth()->user();
         $refreshTokenData = $this->refreshTokenData($user);
         $refreshToken = JWTAuth::getJWTProvider()->encode($refreshTokenData);
         return response()->json([
-            'user' => new UserResource($user), // Returning user resource for better structure
+            'user' => new UserResource($user),
             'access_token' => $token,
             'refresh_token' => $refreshToken,
             'token_type' => 'bearer',
-            'expires_in' => config('jwt.ttl') * 60 // Assuming you set a ttl in the config
+            'expires_in' => config('jwt.ttl') * 60
         ]);
     }
     public function refresh(Request $request)
     {
         try {
-            // Get the current user from the JWT token
             $user = auth()->user();
-
             if (!$user) {
                 return response()->json(['message' => 'Unauthorized'], Response::HTTP_UNAUTHORIZED);
             }
-            // Generate a new access token
             $accessToken = auth()->refresh();
-            // Generate a new refresh token
             $refreshTokenData = [
                 'sub' => $user->id,
-                'exp' => now()->addDays(30)->timestamp, // set expiration for 30 days
+                'exp' => now()->addDays(30)->timestamp,
             ];
             $refreshToken = JWTAuth::getJWTProvider()->encode($refreshTokenData);
-
-            // Set cookies for the new tokens
             $cookies = $this->setTokenAndRefreshTokenCookie($accessToken, $refreshToken);
             $tokenCookie = $cookies['tokenCookie'];
             $refreshCookie = $cookies['refreshTokenCookie'];
-
-            // Return response with tokens
             return response()->json([
                 'user' => [
                     'id' => $user->id,
@@ -90,7 +79,7 @@ class AuthController extends Controller
                     'image' => $user->image,
                 ],
                 'access_token' => $accessToken,
-                'refresh_token' => $refreshToken, // Include the refresh token here
+                'refresh_token' => $refreshToken,
                 'token_type' => 'bearer',
                 'expires_in' => auth()->factory()->getTTL() * 60,
             ])->withCookie($tokenCookie)->withCookie($refreshCookie);
@@ -102,7 +91,6 @@ class AuthController extends Controller
             return response()->json(['message' => 'An error occurred'], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
-
     private function setTokenAndRefreshTokenCookie($token, $refreshToken)
     {
         $cookie = Cookie::make(
@@ -116,7 +104,6 @@ class AuthController extends Controller
             false, // raw
             'None' // SameSite attribute
         );
-
         // Create refresh token cookie
         $refreshCookie = Cookie::make(
             'refresh_token',
@@ -134,7 +121,6 @@ class AuthController extends Controller
             'refreshTokenCookie' => $refreshCookie
         ];
     }
-
     private function refreshTokenData($user)
     {
         return [

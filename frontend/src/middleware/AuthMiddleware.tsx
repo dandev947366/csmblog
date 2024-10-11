@@ -4,12 +4,11 @@ import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from 'react-router-dom';
 import { fetchUser } from '../services/AuthService';
 import { setAuthLogin, setAuthLogout } from '../redux/slice/authSlice';
-
 type ProtectedRouteProps = PropsWithChildren;
 
 const AuthMiddleware = ({ children }: ProtectedRouteProps) => {
     const navigate = useNavigate();
-    const dispatch = useDispatch();  // Declare dispatch here
+    const dispatch = useDispatch();
     const { isAuthenticated, user } = useSelector((state: RootState) => state.auth);
 
     useEffect(() => {
@@ -26,7 +25,6 @@ const AuthMiddleware = ({ children }: ProtectedRouteProps) => {
         };
         checkAuthenticate();
     }, [isAuthenticated, user, dispatch, navigate]);
-
     return isAuthenticated && user ? children : null;
 };
 

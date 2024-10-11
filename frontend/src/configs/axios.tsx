@@ -1,60 +1,51 @@
-import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios"
+import axios, { AxiosError, AxiosInstance, AxiosRequestConfig } from "axios";
 
-const axiosInstance = axios.create({
-
-    baseURL: "http://127.0.0.1:8000/api/v1/",
-    headers: {
-        'Content-Type': "application/json"
-    }
-})
-
-export const baseUrl = "http://127.0.0.1:8000/api/v1/"
+const baseURL = "http://127.0.0.1:8000/api/v1/";
 
 const apiCall: AxiosInstance = axios.create({
-    baseURL: baseUrl,
+    baseURL: baseURL,
     withCredentials: true,
     headers: {
         'Content-Type': "application/json",
-        'Accept' : "application/json"
-     }
+        'Accept': "application/json"
+    }
+});
 
-})
-
+// Refresh token function
 const refreshToken = async () => {
     try {
-        const response = await apiCall.post('/auth/refresh')
-        return response.data
+        const response = await apiCall.post('/auth/refresh');
+        const { access_token } = response.data;
+        return access_token; // Return the new token
     } catch (error) {
-        throw new Error('Can not re-create access token')
+        throw new Error('Cannot re-create access token');
     }
+};
+apiCall.interceptors.request.use();
 
-}
 
-axiosInstance.interceptors.response.use(
-    response => {
-        return response
-    },
-    async (error:AxiosError) => {
-        const originalRequest = error.config as AxiosRequestConfig & { retry?: boolean };
-        if (error.response?.status === 401 && originalRequest._retry) {
-            console.log(123)
-            originalRequest._retry = true
-            try {
-                const userData = await refreshToken()
-                return apiCall(originalRequest)
-            } catch (error) {
+apiCall.interceptors.response.use(
+    response => { return response }, // Pass successful responses through
+    async (error) => {
+        console.log('2123')
 
-                return Promise.reject(error)
-            }
-        }
-        return Promise.reject(error)
     }
+        // const originalRequest = error.config as AxiosRequestConfig & { _retry?: boolean };
+        // if (error.response?.status === 401 && !originalRequest._retry) {
+        //     originalRequest._retry = true; // Prevent infinite retry loops
+        //     try {
+        //         const newAccessToken = await refreshToken();
+        //         console.log('newAccessToken: ', newAccessToken)
+                // apiCall.defaults.headers['Authorization'] = `Bearer ${newAccessToken}`;
+                // originalRequest.headers['Authorization'] = `Bearer ${newAccessToken}`;
+                //return apiCall(originalRequest);
+    //         } catch (refreshError) {
+    //             console.error('Token refresh failed:', refreshError);
+    //             return Promise.reject(refreshError);
+    //         }
+    //     }
+    //     return Promise.reject(error);
+    // }
+);
 
-
-)
-// axios.defaults.withCredentials = true
-// axios.defaults.baseURL = "http://127.0.0.1:8000/api/v1"
-// axios.defaults.headers.common['Content-Type'] = "application/json"
-// axios.defaults.headers.common['Accept'] = "application/json"
-
-export default apiCall
+export default apiCall;

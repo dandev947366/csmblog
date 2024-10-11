@@ -1,9 +1,7 @@
 <?php
 
 namespace App\Http\Requests;
-
 use Illuminate\Foundation\Http\FormRequest;
-
 class AuthRequest extends FormRequest
 {
     /**
@@ -13,7 +11,6 @@ class AuthRequest extends FormRequest
     {
         return true;
     }
-
     /**
      * Get the validation rules that apply to the request.
      *
@@ -26,7 +23,6 @@ class AuthRequest extends FormRequest
             'password' => 'required',
         ];
     }
-
     /**
      * Get the custom validation messages for the request.
      *
