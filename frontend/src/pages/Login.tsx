@@ -19,8 +19,11 @@ const Login = () => {
     setLoading(true);
     try {
       const auth = await login(payload);
+
       dispatch(setToast({ message: "Login Successfully", type: 'success' }));
       dispatch(setAuthLogin(auth));
+      // console.log('User access token:',auth?.accessToken);
+      // console.log('User refresh token:',auth?.refreshToken);
       auth && navigate('/dashboard');
     } catch (error) {
       dispatch(setToast({ message: "Login failed. Please try again.", type: 'error' }));
